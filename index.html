@@ -304,7 +304,7 @@ body{
       <p>集中門市目前使用的常用工具，包含新版標價卡、改價、盤點、出清品下單、信用卡分期試算、新機/報價回收系統與 BOBO PAY 紙本申請書。</p>
     </div>
     <div class="hero-badge">
-      <strong>7</strong>
+      <strong>8</strong>
       <span>目前整合工具數</span>
     </div>
   </section>
@@ -314,7 +314,7 @@ body{
     <div>
       <div class="notice-title">首頁公告</div>
       <div class="notice-text">
-        目前已整合 7 項門市常用工具。若工具網址異動、版本更新或需新增其他入口，請通知營運部-Tony 更新本頁。
+        目前已整合 8 項門市常用工具。若工具網址異動、版本更新或需新增其他入口，請通知營運部-Tony 更新本頁。
       </div>
     </div>
   </section>
@@ -324,8 +324,8 @@ body{
   <div class="empty" id="empty">找不到符合條件的工具。</div>
 
   <div class="footer">
-    <span>Smart Mobile 創宇數位｜門市工具整合平台 V1.11.1</span>
-    <span>內部使用｜最後更新：2026/10/07</span>
+    <span>Smart Mobile 創宇數位｜門市工具整合平台 V1.13</span>
+    <span>內部使用｜最後更新：2026/10/08</span>
   </div>
 </main>
 
@@ -386,12 +386,22 @@ const tools = [
     tag:"申請表單",
     updated:"2026/10/06",
     url:"https://tony-chen0383.github.io/FORMREQUEST/"
+  },
+  {
+    name:"識別證生成套版工具",
+    desc:"提供識別證資料套版與生成作業使用。",
+    icon:"🪪",
+    tag:"識別證工具",
+    updated:"2026/10/08",
+    url:"https://cy-id-card.netlify.app/"
   }
 ];
 
 function render() {
   const q = document.getElementById("searchInput").value.trim().toLowerCase();
-  const filtered = tools.filter(t => (t.name + " " + t.desc + " " + t.tag).toLowerCase().includes(q));
+  const filtered = tools
+    .filter(t => (t.name + " " + t.desc + " " + t.tag).toLowerCase().includes(q))
+    .sort((a, b) => b.updated.localeCompare(a.updated));
   document.getElementById("grid").innerHTML = filtered.map(t => `
     <article class="card">
       <div class="card-top">
