@@ -279,6 +279,22 @@ body{
   .hero-text h1{font-size:25px}
   .brand img{width:60px;height:60px}
 }
+
+.manager-section{margin-top:28px}
+.manager-entry{background:linear-gradient(135deg,#1d2736,#2d3c50);color:#fff;border-radius:18px;padding:20px;display:flex;align-items:center;justify-content:space-between;gap:18px;box-shadow:0 10px 28px rgba(20,35,55,.12)}
+.manager-entry-left{display:flex;align-items:center;gap:14px}
+.manager-lock{width:56px;height:56px;border-radius:16px;background:rgba(255,255,255,.12);display:grid;place-items:center;font-size:26px}
+.manager-entry-title{font-size:18px;font-weight:900}
+.manager-entry-desc{margin-top:5px;color:rgba(255,255,255,.72);font-size:13px}
+.manager-enter-btn,.manager-logout-btn{border:0;background:#fff;color:#1d2736;font-weight:900;padding:11px 16px;border-radius:11px;cursor:pointer}
+.manager-panel{display:none;margin-top:16px;background:#fff;border:1px solid var(--line);border-radius:18px;padding:20px;box-shadow:0 10px 28px rgba(20,59,107,.07)}
+.manager-panel.open{display:block}
+.manager-panel-head{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:16px}
+.manager-panel-title{font-size:18px;font-weight:900}
+.manager-tools-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+@media(max-width:1000px){.manager-tools-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:600px){.manager-entry{align-items:flex-start;flex-direction:column}.manager-tools-grid{grid-template-columns:1fr}}
+
 </style>
 </head>
 <body>
@@ -301,10 +317,10 @@ body{
   <section class="hero">
     <div class="hero-text">
       <h1>門市工具入口網站</h1>
-      <p>集中門市目前使用的常用工具，包含新版標價卡、改價、盤點、出清品下單、信用卡分期試算、新機/報價回收系統與 BOBO PAY 紙本申請書。</p>
+      <p>集中門市目前使用的常用工具，另設店長專區供店長使用限定工具。</p>
     </div>
     <div class="hero-badge">
-      <strong>8</strong>
+      <strong>7</strong>
       <span>目前整合工具數</span>
     </div>
   </section>
@@ -314,7 +330,7 @@ body{
     <div>
       <div class="notice-title">首頁公告</div>
       <div class="notice-text">
-        目前已整合 8 項門市常用工具。若工具網址異動、版本更新或需新增其他入口，請通知營運部-Tony 更新本頁。
+        目前已整合 7 項門市常用工具，另設店長專區。若工具網址異動、版本更新或需新增其他入口，請通知營運部-Tony 更新本頁。
       </div>
     </div>
   </section>
@@ -323,8 +339,41 @@ body{
   <div class="grid" id="grid"></div>
   <div class="empty" id="empty">找不到符合條件的工具。</div>
 
+
+  <section class="manager-section">
+    <h2 class="section-title">店長專區</h2>
+    <div class="manager-entry" id="managerEntry">
+      <div class="manager-entry-left">
+        <div class="manager-lock">🔒</div>
+        <div>
+          <div class="manager-entry-title">店長專區</div>
+          <div class="manager-entry-desc">店長限定工具，請輸入密碼後進入。</div>
+        </div>
+      </div>
+      <button class="manager-enter-btn" onclick="managerLogin()">進入專區</button>
+    </div>
+    <div class="manager-panel" id="managerPanel">
+      <div class="manager-panel-head">
+        <div class="manager-panel-title">🔓 店長專區已登入</div>
+        <button class="manager-logout-btn" onclick="managerLogout()">登出店長專區</button>
+      </div>
+      <div class="manager-tools-grid">
+        <article class="card">
+          <div class="card-top">
+            <div class="icon">🪪</div>
+            <div class="label">識別證工具</div>
+          </div>
+          <div class="name">識別證生成套版工具</div>
+          <p class="desc">提供識別證資料套版與生成作業使用。</p>
+          <div class="meta"><span>最後更新</span><span class="date">2026/10/08</span></div>
+          <a class="btn" href="https://cy-id-card.netlify.app/" target="_blank" rel="noopener noreferrer">開啟工具 ↗</a>
+        </article>
+      </div>
+    </div>
+  </section>
+
   <div class="footer">
-    <span>Smart Mobile 創宇數位｜門市工具整合平台 V1.13</span>
+    <span>Smart Mobile 創宇數位｜門市工具整合平台 V2.0</span>
     <span>內部使用｜最後更新：2026/10/08</span>
   </div>
 </main>
@@ -386,14 +435,6 @@ const tools = [
     tag:"申請表單",
     updated:"2026/10/06",
     url:"https://tony-chen0383.github.io/FORMREQUEST/"
-  },
-  {
-    name:"識別證生成套版工具",
-    desc:"提供識別證資料套版與生成作業使用。",
-    icon:"🪪",
-    tag:"識別證工具",
-    updated:"2026/10/08",
-    url:"https://cy-id-card.netlify.app/"
   }
 ];
 
@@ -422,6 +463,25 @@ function render() {
 
 document.getElementById("searchInput").addEventListener("input", render);
 render();
+
+const MANAGER_PASSWORD = "4562277";
+function updateManagerView(){
+  const loggedIn=sessionStorage.getItem("smartmobile_manager_auth")==="1";
+  const entry=document.getElementById("managerEntry");
+  const panel=document.getElementById("managerPanel");
+  if(!entry||!panel)return;
+  if(loggedIn){entry.style.display="none";panel.classList.add("open");}
+  else{entry.style.display="flex";panel.classList.remove("open");}
+}
+function managerLogin(){
+  const password=window.prompt("請輸入店長專區密碼：");
+  if(password===null)return;
+  if(password===MANAGER_PASSWORD){sessionStorage.setItem("smartmobile_manager_auth","1");updateManagerView();}
+  else{window.alert("密碼錯誤，請重新輸入。");}
+}
+function managerLogout(){sessionStorage.removeItem("smartmobile_manager_auth");updateManagerView();}
+updateManagerView();
+
 </script>
 </body>
 </html>
